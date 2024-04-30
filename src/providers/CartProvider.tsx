@@ -28,6 +28,8 @@ type CartType = {
   checkout: () => void;
   DeliveryDetails: DeliveryDetails;
   setDeliveryDetails: (details: DeliveryDetails) => void;
+  paymentMethod: string;
+  setpaymentMethod: (method: string) => void;
 };
 
 const CartContext = createContext<CartType>({
@@ -38,6 +40,8 @@ const CartContext = createContext<CartType>({
   checkout: () => {},
   DeliveryDetails: { type: "", location: "", date: null },
   setDeliveryDetails: () => {},
+  paymentMethod: "",
+  setpaymentMethod: () => {},
 });
 
 const CartProvider = ({ children }: PropsWithChildren) => {
@@ -47,6 +51,7 @@ const CartProvider = ({ children }: PropsWithChildren) => {
     location: "",
     date: null,
   });
+  const [paymentMethod, setpaymentMethod] = useState<string>("CashDelivery");
 
   const router = useRouter();
   //Increment the quantity of the item in the cart
@@ -62,7 +67,6 @@ const CartProvider = ({ children }: PropsWithChildren) => {
       updateQuantity(existingItem.id, 1);
       return;
     }
-
     const newCartItem: CartItem = {
       id: randomUUID(),
       product,
@@ -71,6 +75,7 @@ const CartProvider = ({ children }: PropsWithChildren) => {
       size,
       delivery: "",
       deliveryDate: new Date(),
+      paymentMethod: "",
     };
     setItems([newCartItem, ...items]);
   };
@@ -93,6 +98,9 @@ const CartProvider = ({ children }: PropsWithChildren) => {
     // Update the DeliveryDetails state in the context
     setDeliveryDetails(newDeliveryDetails);
   };
+  const handlepaymentMethod = (method: string) => {
+    setpaymentMethod(method);
+  };
 
   const clearCart = () => {
     setItems([]);
@@ -111,7 +119,8 @@ const CartProvider = ({ children }: PropsWithChildren) => {
         status: "New",
         delivery: DeliveryDetails.location,
         type: DeliveryDetails.type,
-        deliveryDate: DeliveryDetails.date,
+        deliveryDate: DeliveryDetails.date?.toDateString() || "",
+        paymentMethod: paymentMethod,
       },
       {
         onSuccess: (order) => {
@@ -123,12 +132,11 @@ const CartProvider = ({ children }: PropsWithChildren) => {
             quantity: cartItem.quantity,
             size: cartItem.size as string, // Assuming you need to convert an enum or custom type to string
           }));
-
+          console.log("paymentMethod ", paymentMethod);
           InsertOrderItems(orderItems, {
             // Pass array directly
             onSuccess: () => {
               clearCart();
-              console.log(order);
               router.push(`/(user)/orders/${order.id}`);
             },
           });
@@ -147,6 +155,7 @@ const CartProvider = ({ children }: PropsWithChildren) => {
         checkout,
         setDeliveryDetails: handleDeliveryDetails, // Function to update
         DeliveryDetails,
+        setpaymentMethod: handlepaymentMethod,
       }}
     >
       {children}

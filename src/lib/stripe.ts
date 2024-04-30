@@ -110,18 +110,18 @@ export const initialisePaymentSheet = async (amount: number) => {
   // await initializePaymentSheet(clientSecret);
   // await openPaymentSheet();
   console.log("Initialising payment sheet, for: ", amount);
-  const { paymentIntent, publishableKey } =
+  const { paymentIntent, publishableKey, customer, ephemeralKey } =
     await fetchPaymentSheetParams(amount);
   if (!paymentIntent || !publishableKey) return;
   await initPaymentSheet({
     paymentIntentClientSecret: paymentIntent,
+    customerEphemeralKeySecret: ephemeralKey.secret,
+    customerId: customer,
     merchantDisplayName: "Bunkin' Bakery",
     defaultBillingDetails: {
       name: "Jane Doe",
     },
     // Define additional configuration options as needed
-    // customerEphemeralKeySecret: ephemeralKey.secret,
-    // customerId: customer,
   });
   console.log("Payment Sheet initialised successfully");
 };

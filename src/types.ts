@@ -26,6 +26,7 @@ export type CartItem = {
   quantity: number;
   delivery: string;
   deliveryDate: Date;
+  paymentMethod: string;
 };
 
 export const OrderStatusList: OrderStatus[] = [

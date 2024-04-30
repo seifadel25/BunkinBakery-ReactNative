@@ -20,6 +20,7 @@ const pay = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const handleSelectOption = (option: string) => {
     setSelectedOption(option);
+    setpaymentMethod(option.toString());
   };
   const payStripe = async () => {
     await initialisePaymentSheet(Math.floor(amount * 100));
@@ -27,33 +28,24 @@ const pay = () => {
     if (!payed) {
       return;
     }
-    setpaymentMethod(selectedOption.toString());
     checkout();
     Alert.alert("Payment successful", "Thank you for your purchase");
   };
   const CashDelivery = async () => {
-    setpaymentMethod("CashDelivery");
     checkout();
     Alert.alert("Payment successful", "Thank you for your purchase");
   };
   const CashPickup = async () => {
     console.log("CashPickup");
-    setpaymentMethod("CashPickup");
     checkout();
     Alert.alert("Payment successful", "Thank you for your purchase");
   };
-  const handlePaymentPress = async () => {
+  const handlePaymentPress = () => {
     if (selectedOption === "Stripe") {
-      setpaymentMethod(selectedOption.toString());
-
       return payStripe();
     } else if (selectedOption === "CashDelivery") {
-      setpaymentMethod(selectedOption.toString());
-
       return CashDelivery();
     } else if (selectedOption === "CashPickup") {
-      setpaymentMethod(selectedOption.toString());
-
       return CashPickup();
     } else {
       return Alert.alert("Please select a payment option");
