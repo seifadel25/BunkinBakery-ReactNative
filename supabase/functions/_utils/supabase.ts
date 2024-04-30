@@ -30,7 +30,7 @@ export const createOrRetrieveProfile = async (req: Request) => {
     return profile.stripe_customer_id;
   }
 
-  const ccustomer = await stripe.customers.create({
+  const customer = await stripe.customers.create({
     email: user.email,
     metadata: {
       uid: user.id,
@@ -39,9 +39,9 @@ export const createOrRetrieveProfile = async (req: Request) => {
   await supabaseClient
     .from("profiles")
     .update({
-      stripe_customer_id: ccustomer.id,
+      stripe_customer_id: customer.id,
     })
     .eq("id", profile.id);
 
-  return ccustomer.id;
+  return customer.id;
 };
