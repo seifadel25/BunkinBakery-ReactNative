@@ -5,7 +5,7 @@ import {
   presentPaymentSheet,
 } from "@stripe/stripe-react-native";
 import { Alert } from "react-native";
-
+//src/lib/stripe.ts
 const fetchPaymentSheetParams = async (amount: number) => {
   try {
     const { data, error } = await supabase.functions.invoke("payment-sheet", {
@@ -55,7 +55,6 @@ export const openPaymentSheet = async () => {
     Alert.alert(error.message);
     return false;
   }
-  Alert.alert("Payment successful");
   return true;
 };
 

@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { stripe } from "../_utils/stripe.ts";
 import { createOrRetrieveProfile } from "../_utils/supabase.ts";
-
+//payment-sheet edge function
 serve(async (req: Request) => {
   try {
     const { amount } = await req.json();
@@ -16,6 +16,7 @@ serve(async (req: Request) => {
       amount: amount || 1099,
       currency: "usd",
       customer: customer,
+      setup_future_usage: "off_session",
     });
 
     const res = {

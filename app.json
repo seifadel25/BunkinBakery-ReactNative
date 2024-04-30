@@ -12,7 +12,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -24,17 +26,32 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"]
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ],
+      "package": "com.seifadel25.FoodOrdering"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": ["expo-router", "expo-secure-store"],
+    "plugins": [
+      "expo-router",
+      "expo-secure-store"
+    ],
     "experiments": {
       "typedRoutes": true,
       "tsconfigPaths": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "bfe04b1e-be09-45da-94e2-f5991e3005a6"
+      }
     }
   }
 }

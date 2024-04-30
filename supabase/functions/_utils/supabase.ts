@@ -1,6 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { stripe } from "./stripe.ts";
-
+//supabase.ts utils edge function
 export const createOrRetrieveProfile = async (req: Request) => {
   const supabaseClient = createClient(
     Deno.env.get("SUPABASE_URL") ?? "",
