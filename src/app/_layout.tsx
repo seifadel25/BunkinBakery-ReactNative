@@ -60,6 +60,8 @@ function RootLayoutNav() {
           process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY ||
           "pk_test_51PARzJBmffrbeZXHP1E2KNRRiypcsunYY3Tw3uAiwgGq7c7UXy2RKnAYpiNf76jy4YSpSR7cvaOoCVWfptfExDIF00DKbU7UyB"
         }
+        urlScheme="com.bunkinbakery.app"
+        merchantIdentifier="merchant.com.bunkinbakery.app"
       >
         <AuthProvider>
           <QueryProvider>

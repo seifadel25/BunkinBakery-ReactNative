@@ -13,7 +13,7 @@ const fetchPaymentSheetParams = async (amount: number) => {
     });
 
     if (data) {
-      console.log(data);
+      console.log(data.paymentIntent.client_secret);
       return data;
     }
     if (error && error instanceof FunctionsHttpError) {
@@ -47,7 +47,6 @@ export const initialisePaymentSheet = async (amount: number) => {
     },
     // Define additional configuration options as needed
   });
-  console.log("Payment Sheet initialised successfully" + result);
 };
 export const openPaymentSheet = async () => {
   const { error } = await presentPaymentSheet();
