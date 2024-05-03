@@ -85,14 +85,11 @@ const CreateProductScreen = () => {
     updateProduct(
       { id, name, price: parseFloat(price), image: imagePath },
       {
-        onError: (error) => {
-          console.log(error);
-        },
+        onError: (error) => {},
         onSuccess: () => {
           resetValues();
           router.replace("/(admin)/menu");
           setLoading(false);
-          console.log("Update product name:" + name + " price:" + price);
         },
       }
     );
@@ -109,7 +106,6 @@ const CreateProductScreen = () => {
     });
   };
   const confirmDel = () => {
-    console.log("Confirm delete");
     // Confirm delete
     Alert.alert(
       "Delete Product",
@@ -169,7 +165,6 @@ const CreateProductScreen = () => {
       quality: 1,
     });
 
-    console.log(result);
     setIfImage(true);
     if (!result.canceled) {
       setImage(result.assets[0].uri);

@@ -18,7 +18,6 @@ const fetchPaymentSheetParams = async (amount: number) => {
     }
 
     if (data) {
-      console.log("Fetched payment sheet params:", data);
       return data;
     } else {
       Alert.alert("Error", "No data received");
@@ -32,8 +31,6 @@ const fetchPaymentSheetParams = async (amount: number) => {
 };
 
 export const initialisePaymentSheet = async (amount: number) => {
-  console.log("Initialising payment sheet, for:", amount);
-
   const params = await fetchPaymentSheetParams(amount);
   if (!params) return; // Check if params is null and abort if so
 
@@ -58,7 +55,6 @@ export const initialisePaymentSheet = async (amount: number) => {
     console.error("Failed to initialize payment sheet:", result.error);
     Alert.alert("Error", result.error.message);
   } else {
-    console.log("Payment sheet initialized:", result);
   }
 };
 
@@ -70,6 +66,5 @@ export const openPaymentSheet = async () => {
     Alert.alert("Payment Error", error.message);
     return false;
   }
-  console.log("Payment successful");
   return true;
 };

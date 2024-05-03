@@ -40,15 +40,18 @@ export default ProductsList;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
-    padding: 20,
     borderRadius: 20,
+    paddingHorizontal: 10,
+    paddingTop: 10,
+    paddingBottom: 20,
     flex: 1,
-    maxWidth: "50%",
+    overflow: "visible",
+    justifyContent: "space-evenly",
   },
   title: {
     fontSize: 20,
     fontWeight: "600",
-    marginVertical: 10,
+    marginVertical: 15,
   },
   price: {
     fontSize: 18,
@@ -57,7 +60,9 @@ const styles = StyleSheet.create({
   },
   img: {
     width: "100%",
-    aspectRatio: 1,
-    resizeMode: "contain",
+    height: 150,
+    resizeMode: "cover",
+    borderRadius: 20,
+    overflow: "visible",
   },
 });

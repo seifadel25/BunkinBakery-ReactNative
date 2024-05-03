@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.light.tint,
     padding: 15,
     alignItems: "center",
-    borderRadius: 100,
+    borderRadius: 20,
     marginVertical: 10,
   },
   text: {

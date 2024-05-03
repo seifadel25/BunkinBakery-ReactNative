@@ -1,16 +1,29 @@
-import { View, Text, TextInput, StyleSheet, Alert } from "react-native";
+import { View, Text, TextInput, StyleSheet, Alert, Image } from "react-native";
 import React, { useState } from "react";
 import Button from "@/components/Button";
 import Colors from "@/constants/Colors";
 import { Link, Redirect, Stack, useNavigation, useRouter } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 import { supabase } from "@/lib/supabase";
+import * as ImagePicker from "expo-image-picker";
+import { randomUUID } from "expo-crypto";
+import { decode } from "base64-arraybuffer";
+import * as FileSystem from "expo-file-system";
+import RemoteImage from "@/components/RemoteImage";
+import { defaultPizzaImg } from "@/components/ProductsList";
+import { useInsertProfile } from "@/api/profiles";
+
 const signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [full_name, setFull_name] = useState("");
+  const [username, setUsername] = useState("");
   const [error, setError] = useState("");
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [ifImage, setIfImage] = useState(false);
+  const [image, setImage] = useState<string | null>(null);
+  const { mutate: insertProfile } = useInsertProfile();
 
   const navigation = useNavigation();
   const router = useRouter();
@@ -18,22 +31,53 @@ const signup = () => {
     setLoading(true);
     if (!validate()) return;
 
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    if (error) {
-      Alert.alert(error.message);
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp(
+      {
+        email,
+        password,
+      }
+    );
+    if (signUpError) {
+      setError(signUpError.message);
       setLoading(false);
       return;
     }
-    setLoading(false);
-    router.replace("/(auth)/login");
+    const id = signUpData?.user?.id;
 
-    //navigation.navigate("/(auth)/login");
-    // return <Redirect href="/(auth)/login" />;
-    // Handle sign up.
+    console.log("userId", id);
+    if (!id) {
+      setError("Sign up successful, but no user ID returned.");
+      setLoading(false);
+      return;
+    }
+    console.log("hi before mutate");
+    console.log("hi after mutate");
+    const imagePath = await uploadImage();
+    console.log("hi after img");
+
+    try {
+      insertProfile(
+        { id, full_name, username, avatar_url: imagePath || null },
+        {
+          onSuccess: () => {
+            console.log("hi after success");
+            setLoading(false);
+            router.replace("/(auth)/login");
+          },
+          onError: (error) => {
+            console.error("Error inserting profile:", error);
+            Alert.alert(error.message);
+            setError(error.message || "Profile insertion failed");
+            setLoading(false);
+          },
+        }
+      );
+      console.log("hi after mutate");
+    } catch (mutationError: any) {
+      console.error("Mutation error:", mutationError);
+      setError(mutationError.message || "Profile insertion failed");
+      setLoading(false);
+    }
   }
   const validate = () => {
     setError("");
@@ -45,10 +89,71 @@ const signup = () => {
     }
     return true;
   };
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
+    setIfImage(true);
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+  const uploadImage = async () => {
+    if (!image?.startsWith("file://")) {
+      return;
+    }
+
+    const base64 = await FileSystem.readAsStringAsync(image, {
+      encoding: "base64",
+    });
+    const filePath = `${randomUUID()}.png`;
+    const contentType = "image/png";
+    const { data, error } = await supabase.storage
+      .from("product-images")
+      .upload(filePath, decode(base64), { contentType });
+
+    if (data) {
+      return data.path;
+    }
+  };
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ title: "Sign up" }} />
+      {ifImage ? (
+        <Image source={{ uri: image || defaultPizzaImg }} style={styles.img} />
+      ) : (
+        <RemoteImage
+          path={image}
+          fallback={defaultPizzaImg}
+          style={styles.img}
+        />
+      )}
+      <Text disabled={loading} style={styles.txtBtn} onPress={pickImage}>
+        Select Image
+      </Text>
+      <View style={styles.form}>
+        <Text style={styles.label}>Full Name</Text>
+        <TextInput
+          style={styles.input}
+          value={full_name}
+          onChangeText={setFull_name}
+          placeholder="Full Name"
+        />
+      </View>
+      <View style={styles.form}>
+        <Text style={styles.label}>Username</Text>
+        <TextInput
+          style={styles.input}
+          value={username}
+          onChangeText={setUsername}
+          placeholder="Username"
+        />
+      </View>
       <View style={styles.form}>
         <Text style={styles.label}>Email</Text>
         <TextInput
@@ -135,6 +240,25 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginLeft: -30,
     marginRight: 10,
+  },
+  txtBtn: {
+    color: Colors.light.text,
+    fontSize: 18,
+    fontWeight: "bold",
+    marginTop: 5,
+    marginBottom: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    backgroundColor: Colors.light.Sec,
+  },
+  img: {
+    width: "50%",
+    aspectRatio: 1,
+    borderRadius: 500,
+    borderWidth: 1,
+    borderColor: Colors.light.Sec,
+    marginBottom: 15,
   },
 });
 export default signup;

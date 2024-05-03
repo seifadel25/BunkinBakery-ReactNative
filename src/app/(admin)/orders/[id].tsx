@@ -21,6 +21,7 @@ import {
   useUpdateOrder,
 } from "@/api/orders";
 import { FontAwesome } from "@expo/vector-icons";
+import { notifyUserABoutOrderUpdate } from "@/lib/notifications";
 
 const status: OrderStatus[] = ["New", "Cooking", "Delivering", "Delivered"];
 const orderItem = () => {
@@ -56,9 +57,12 @@ const orderItem = () => {
     return <Text>Failed to fetch: {error.message}</Text>;
   }
 
-  const updateStatus = (status: string) => {
+  const updateStatus = async (status: string) => {
     setOrderStatus(status);
-    updateOrder({ id: id, updatedFields: { status } });
+    await updateOrder({ id: id, updatedFields: { status } });
+    if (order) {
+      await notifyUserABoutOrderUpdate({ ...order, status });
+    }
   };
   return (
     <View style={styles.container}>

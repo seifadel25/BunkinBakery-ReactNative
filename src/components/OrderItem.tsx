@@ -24,10 +24,8 @@ const OrderItem = ({ item, orderItem }: OrderItemProp) => {
       <View style={styles.left}>
         <Text style={styles.name}>{item.name}</Text>
         <View style={styles.leftDetails}>
-          <Text style={styles.price}>
-            {item.price * orderItem.quantity} EGP
-          </Text>
-          <Text style={styles.size}>Size: {orderItem.size}</Text>
+          <Text style={styles.price}>{orderItem.comboPrice} EGP</Text>
+          <Text style={styles.size}>Size: {orderItem.selectedSize}</Text>
         </View>
       </View>
       <View style={styles.right}>

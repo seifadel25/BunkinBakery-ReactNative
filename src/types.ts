@@ -14,19 +14,22 @@ export type Product = {
   image: string | null;
   name: string;
   price: number;
+  desc: string | null;
+  size: number;
 };
 
-export type PizzaSize = "S" | "M" | "L" | "XL";
+export type PizzaSize = 1 | 3 | 6 | 12;
 
 export type CartItem = {
   id: string;
   product: Product;
   product_id: number;
-  size: PizzaSize;
+  comboPrice: number;
   quantity: number;
   delivery: string;
   deliveryDate: Date;
   paymentMethod: string;
+  selectedSize: PizzaSize;
 };
 
 export const OrderStatusList: OrderStatus[] = [
@@ -53,7 +56,7 @@ export type OrderItem = {
   product_id: number;
   products: Product;
   order_id: number;
-  size: PizzaSize;
+  selectedSize: PizzaSize;
   quantity: number;
 };
 

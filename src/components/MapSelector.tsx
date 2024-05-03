@@ -1,5 +1,5 @@
 import React from "react";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 interface MapSelectorProps {
   mapRegion: {
     latitude: number;
@@ -23,6 +23,7 @@ const MapSelector: React.FC<MapSelectorProps> = ({
   setMarkerLocation,
 }) => (
   <MapView
+    provider={PROVIDER_GOOGLE}
     style={{ width: "100%", height: 300 }}
     region={mapRegion}
     onPress={(event) => {

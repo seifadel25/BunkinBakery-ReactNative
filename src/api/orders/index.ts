@@ -55,7 +55,8 @@ export const useOrderDetails = (id: number) => {
       id,
       productId,
       quantity,
-      size,
+      selectedSize,
+      comboPrice,
       created_at,
       products (
         id,
@@ -192,7 +193,6 @@ export const useOrderListSubs = () => {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "orders" },
         (payload) => {
-          console.log("Change received!", payload);
           queryClient.invalidateQueries({ queryKey: ["orders"] });
         }
       )

@@ -19,13 +19,10 @@ export default function MenuScreen() {
   //       .select("*")
   //       .order("price", { ascending: false });
   //     if (error) {
-  //       console.log(error);
   //     }
-  //     console.log(data);
   //   };
   //   fetchProducts();
   // }, []);
-  console.log(session?.user.email);
   if (isLoading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }

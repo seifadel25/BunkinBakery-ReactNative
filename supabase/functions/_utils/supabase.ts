@@ -1,6 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { stripe } from "./stripe.ts";
-//supabase.ts utils edge function
+
 export const createOrRetrieveProfile = async (req: Request) => {
   const supabaseClient = createClient(
     Deno.env.get("SUPABASE_URL") ?? "",
@@ -24,23 +24,22 @@ export const createOrRetrieveProfile = async (req: Request) => {
     .eq("id", user.id)
     .single();
   if (error || !profile) {
-    throw new Error("No profile found");
+    throw new Error("Profile not found");
   }
+
   if (profile.stripe_customer_id) {
     return profile.stripe_customer_id;
   }
 
+  // Create a Stripe customer
   const customer = await stripe.customers.create({
     email: user.email,
-    metadata: {
-      uid: user.id,
-    },
+    metadata: { uid: user.id },
   });
+
   await supabaseClient
     .from("profiles")
-    .update({
-      stripe_customer_id: customer.id,
-    })
+    .update({ stripe_customer_id: customer.id })
     .eq("id", profile.id);
 
   return customer.id;

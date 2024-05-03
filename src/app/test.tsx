@@ -37,7 +37,6 @@ const pay = () => {
     Alert.alert("Payment successful", "Thank you for your purchase");
   };
   const CashPickup = async () => {
-    console.log("CashPickup");
     setpaymentMethod("CashPickup");
     checkout();
     Alert.alert("Payment successful", "Thank you for your purchase");

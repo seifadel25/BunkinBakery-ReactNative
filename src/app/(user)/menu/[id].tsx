@@ -6,7 +6,7 @@ import {
   Pressable,
   ActivityIndicator,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import Button from "@/components/Button";
@@ -17,7 +17,7 @@ import { useProduct } from "@/api/products";
 import { defaultPizzaImg } from "@/components/ProductsList";
 import RemoteImage from "@/components/RemoteImage";
 
-const sizes: PizzaSize[] = ["S", "M", "L", "XL"];
+const sizes: PizzaSize[] = [1, 3, 6, 12];
 
 const product = () => {
   const { id: idString } = useLocalSearchParams();
@@ -27,7 +27,31 @@ const product = () => {
 
   const router = useRouter();
 
-  const [selectedSize, setSelectedSize] = useState<PizzaSize>("L");
+  const [selectedSize, setSelectedSize] = useState<PizzaSize>(1);
+
+  const [comboPrice, setcomboPrice] = useState(0);
+
+  useEffect(() => {
+    if (product) {
+      setcomboPrice((product.price || 5) * (product.size || 1));
+    }
+  }, [product]);
+  const onChangeSize = (size: PizzaSize) => {
+    setSelectedSize(size);
+    if (size === 1) {
+      setcomboPrice((product?.price || 1) * size);
+    } else if (size === 3) {
+      setcomboPrice((product?.price || 3) * size - (product?.price || 3) * 0.2);
+    } else if (size === 6) {
+      setcomboPrice(
+        (product?.price || 6) * size - (product?.price || 6) * 0.45
+      );
+    } else if (size === 12) {
+      setcomboPrice(
+        (product?.price || 12) * size - (product?.price || 12) * 1.1
+      );
+    }
+  };
 
   if (!product) {
     return <Text>product not found</Text>;
@@ -35,8 +59,9 @@ const product = () => {
 
   const addToCart = () => {
     if (!product) return;
+    console.log(comboPrice, selectedSize);
 
-    addItem(product, selectedSize);
+    addItem(product, comboPrice, selectedSize);
     router.push("/cart");
   };
   if (isLoading) {
@@ -63,7 +88,7 @@ const product = () => {
         <View style={styles.sizes}>
           {sizes.map((size) => (
             <Pressable
-              onPress={() => setSelectedSize(size)}
+              onPress={() => onChangeSize(size)}
               key={size}
               style={[
                 styles.size,
@@ -88,7 +113,7 @@ const product = () => {
 
       <View style={styles.end}>
         {/* <Text style={styles.price}>{(product.price * 10).toFixed(2)} EGP</Text> */}
-        <Text style={styles.price}>{product.price} EGP</Text>
+        <Text style={styles.price}>{comboPrice} EGP</Text>
 
         <Button width={"100%"} text="Add to Cart" onPress={addToCart} />
       </View>
@@ -103,7 +128,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
   },
-  main: { flex: 3 },
+  main: { flex: 3, overflow: "visible" },
   end: {
     // marginTop: "30%",
     flex: 1,
@@ -116,8 +141,11 @@ const styles = StyleSheet.create({
   },
   img: {
     width: "100%",
-    aspectRatio: 1,
-    resizeMode: "contain",
+    height: 250,
+    resizeMode: "cover",
+    borderRadius: 20,
+    overflow: "visible",
+    marginBottom: 10,
   },
   sizes: {
     flexDirection: "row",

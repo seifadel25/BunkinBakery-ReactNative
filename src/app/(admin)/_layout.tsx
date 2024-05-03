@@ -19,7 +19,6 @@ function TabBarIcon(props: {
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const { isAdmin } = useAuth();
-  console.log(isAdmin);
 
   if (!isAdmin) {
     return <Redirect href={"/"} />;

@@ -39,6 +39,7 @@ const orderItem = () => {
   }
 
   if (error) {
+    console.log(error, error.message);
     return <Text>Failed to fetch: {error.message}</Text>;
   }
   return (

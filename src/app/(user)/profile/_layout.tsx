@@ -4,8 +4,8 @@ export default function OrdersLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShown: true,
-        title: "Orders List",
+        headerShown: false,
+        title: "Profile",
       }}
     />
   );

@@ -17,7 +17,6 @@ const OrderList = ({ order }: OrderListProp) => {
     if (order?.id) {
       router.navigate(`/${type}/orders/${order.id}`);
     } else {
-      console.log("Order ID is missing");
       router.navigate(`/${type}/orders`);
     }
   };

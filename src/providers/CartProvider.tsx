@@ -1,4 +1,4 @@
-import { CartItem } from "@/types";
+import { CartItem, PizzaSize } from "@/types";
 import React, {
   createContext,
   useReducer,
@@ -22,7 +22,11 @@ interface DeliveryDetails {
 type Product = Tables<"products">;
 type CartType = {
   items: CartItem[];
-  addItem: (product: Product, size: CartItem["size"]) => void;
+  addItem: (
+    product: Product,
+    comboPrice: number,
+    selectedSize: PizzaSize
+  ) => void;
   updateQuantity: (itemId: string, amount: -1 | 1) => void;
   total: number;
   checkout: () => void;
@@ -52,6 +56,7 @@ const CartProvider = ({ children }: PropsWithChildren) => {
     date: null,
   });
   const [paymentMethod, setpaymentMethod] = useState<string>("CashDelivery");
+  // const [selectedSize, setselectedSize] = useState<PizzaSize>(1);
 
   const router = useRouter();
   //Increment the quantity of the item in the cart
@@ -59,23 +64,32 @@ const CartProvider = ({ children }: PropsWithChildren) => {
   const { mutate: InsertOrder } = useInsertOrder();
   const { mutate: InsertOrderItems } = useInsertOrderItems();
 
-  const addItem = (product: Product, size: CartItem["size"]) => {
+  const addItem = (
+    product: Product,
+    comboPrice: number,
+    selectedSize: PizzaSize
+  ) => {
     const existingItem = items.find(
-      (item) => item.product === product && item.size === size
+      (item) => item.product === product && item.comboPrice === comboPrice
     );
     if (existingItem) {
       updateQuantity(existingItem.id, 1);
       return;
     }
+    console.log(selectedSize, "first");
+    // setselectedSize(selectedSize);
+    console.log(selectedSize, "second");
+
     const newCartItem: CartItem = {
       id: randomUUID(),
       product,
       product_id: product.id,
       quantity: 1,
-      size,
+      comboPrice,
       delivery: "",
       deliveryDate: new Date(),
       paymentMethod: "",
+      selectedSize,
     };
     setItems([newCartItem, ...items]);
   };
@@ -91,7 +105,7 @@ const CartProvider = ({ children }: PropsWithChildren) => {
     setItems(updatedItems);
   };
   const total = items.reduce(
-    (sum, item) => (sum += item.product.price * item.quantity),
+    (sum, item) => (sum += item.comboPrice * item.quantity),
     0
   );
   const handleDeliveryDetails = (newDeliveryDetails: DeliveryDetails) => {
@@ -130,9 +144,9 @@ const CartProvider = ({ children }: PropsWithChildren) => {
             orderId: order.id, // Corrected property name from 'order_id' to 'orderId'
             productId: cartItem.product_id, // Ensure this name matches what's expected
             quantity: cartItem.quantity,
-            size: cartItem.size as string, // Assuming you need to convert an enum or custom type to string
+            selectedSize: cartItem.selectedSize as PizzaSize, // Assuming you need to convert an enum or custom type to string
+            comboPrice: cartItem.comboPrice,
           }));
-          console.log("paymentMethod ", paymentMethod);
           InsertOrderItems(orderItems, {
             // Pass array directly
             onSuccess: () => {

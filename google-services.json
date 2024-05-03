@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "918472118694",
+    "project_id": "testbunkin",
+    "storage_bucket": "testbunkin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:918472118694:android:e34c9eb026ced4c4133f67",
+        "android_client_info": {
+          "package_name": "com.seifadel25.FoodOrdering"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCS_tPBd2dWCG7_dQ300T8rx1NZs2g3TZY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

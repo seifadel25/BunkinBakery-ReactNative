@@ -63,8 +63,6 @@ function DeliveryOptionsScreen() {
     });
 
     if (result.length > 0) {
-      // console.log(result);
-      // console.log(mapRegion);
       setAddress(
         `${streetBuilding.buildingNumber},${streetBuilding.streetNumber},${result[0].street}, ${result[0].city}, ${result[0].region}, ${result[0].country},`
       );

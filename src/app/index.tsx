@@ -19,11 +19,10 @@ const index = () => {
   if (!session) {
     return <Redirect href={"/login"} />;
   }
-  if (!isAdmin) {
+  if (profile.group === "USER" || !isAdmin) {
     return <Redirect href={"/(user)"} />;
   }
-  console.log(session.user.id);
-  if (profile?.group === "ADMIN") {
+  if (profile.group === "ADMIN") {
     return (
       <View
         style={{
