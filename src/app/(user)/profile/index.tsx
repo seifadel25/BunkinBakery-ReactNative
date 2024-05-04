@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 import RemoteImage from "@/components/RemoteImage";
 import { useProfile } from "@/api/profiles";
 import { useAuth } from "@/providers/AuthProvider";
+import { router } from "expo-router";
 
 const profile = () => {
   const { profile } = useAuth();
@@ -56,6 +57,15 @@ const profile = () => {
           await supabase.auth.signOut();
         }}
       />
+      {profile.group === "ADMIN" && (
+        <Button
+          width={"50%"}
+          text="Admin Panel"
+          onPress={() => {
+            router.push("/(admin)/menu");
+          }}
+        />
+      )}
     </View>
   );
 };

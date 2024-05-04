@@ -1,4 +1,12 @@
-import { View, Text, TextInput, StyleSheet, Alert, Image } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Alert,
+  Image,
+  ImageBackground,
+} from "react-native";
 import React, { useState } from "react";
 import Button from "@/components/Button";
 import Colors from "@/constants/Colors";
@@ -121,83 +129,104 @@ const signup = () => {
       return data.path;
     }
   };
+  const backgroundImage = require("@assets/images/Signup.jpg");
+
   return (
-    <View style={styles.container}>
-      <Stack.Screen options={{ title: "Sign up" }} />
-      {ifImage ? (
-        <Image source={{ uri: image || defaultPizzaImg }} style={styles.img} />
-      ) : (
-        <RemoteImage
-          path={image}
-          fallback={defaultPizzaImg}
-          style={styles.img}
-        />
-      )}
-      <Text disabled={loading} style={styles.txtBtn} onPress={pickImage}>
-        Select Image
-      </Text>
-      <View style={styles.form}>
-        <Text style={styles.label}>Full Name</Text>
-        <TextInput
-          style={styles.input}
-          value={full_name}
-          onChangeText={setFull_name}
-          placeholder="Full Name"
-        />
-      </View>
-      <View style={styles.form}>
-        <Text style={styles.label}>Username</Text>
-        <TextInput
-          style={styles.input}
-          value={username}
-          onChangeText={setUsername}
-          placeholder="Username"
-        />
-      </View>
-      <View style={styles.form}>
-        <Text style={styles.label}>Email</Text>
-        <TextInput
-          style={styles.input}
-          value={email}
-          onChangeText={setEmail}
-          placeholder="Email"
-        />
-      </View>
-      <View style={styles.form}>
-        <Text style={styles.label}>Password</Text>
-        <View style={styles.pswd}>
-          <TextInput
-            secureTextEntry={!show}
-            style={styles.input}
-            value={password}
-            onChangeText={setPassword}
-            placeholder="Password"
-          />
-          <Text
-            style={styles.show}
-            onPress={() => {
-              setShow(!show);
-            }}
-          >
-            {!show && <FontAwesome size={18} name="eye-slash" />}
-            {show && <FontAwesome size={18} name="eye" />}
-          </Text>
-        </View>
-      </View>
-      <Text style={{ color: "red" }}>{error}</Text>
-      <Button
-        disabled={loading}
-        width={"50%"}
-        text={loading ? "Creating account..." : "Create account"}
-        onPress={onSignup}
+    <ImageBackground
+      source={backgroundImage}
+      style={styles.container}
+      blurRadius={3}
+    >
+      <Stack.Screen
+        options={{
+          title: "Sign up",
+          headerTransparent: true, // Make the header fully transparent
+
+          headerStyle: {
+            backgroundColor: "rgba(255, 255, 255, 0.5)", // Set the desired opacity here
+          },
+          headerTintColor: Colors.light.text, // Change header text color to make it visible against the background
+        }}
       />
-      <Text>
-        Already have an account?
-        <Link href={"/(auth)/login"}>
-          <Text style={styles.login}> Login</Text>
-        </Link>
-      </Text>
-    </View>
+      <View style={styles.Form}>
+        {ifImage ? (
+          <Image
+            source={{ uri: image || defaultPizzaImg }}
+            style={styles.img}
+          />
+        ) : (
+          <RemoteImage
+            path={image}
+            fallback={defaultPizzaImg}
+            style={styles.img}
+          />
+        )}
+        <Text disabled={loading} style={styles.txtBtn} onPress={pickImage}>
+          User Image
+        </Text>
+        <View style={styles.form}>
+          <Text style={styles.label}>Full Name</Text>
+          <TextInput
+            style={styles.input}
+            value={full_name}
+            onChangeText={setFull_name}
+            placeholder="Full Name"
+          />
+        </View>
+        <View style={styles.form}>
+          <Text style={styles.label}>Username</Text>
+          <TextInput
+            style={styles.input}
+            value={username}
+            onChangeText={setUsername}
+            placeholder="Username"
+          />
+        </View>
+        <View style={styles.form}>
+          <Text style={styles.label}>Email</Text>
+          <TextInput
+            style={styles.input}
+            value={email}
+            onChangeText={setEmail}
+            placeholder="Email"
+          />
+        </View>
+        <View style={styles.form}>
+          <Text style={styles.label}>Password</Text>
+          <View style={styles.pswd}>
+            <TextInput
+              secureTextEntry={!show}
+              style={styles.input}
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Password"
+            />
+            <Text
+              style={styles.show}
+              onPress={() => {
+                setShow(!show);
+              }}
+            >
+              {!show && <FontAwesome size={18} name="eye-slash" />}
+              {show && <FontAwesome size={18} name="eye" />}
+            </Text>
+          </View>
+        </View>
+        <Text style={{ color: "red" }}>{error}</Text>
+        <Button
+          disabled={loading}
+          width={"50%"}
+          text={loading ? "Creating account..." : "Create account"}
+          onPress={onSignup}
+        />
+        <Text>
+          Already have an account?
+          <Link href={"/(auth)/login"}>
+            <Text style={styles.login}> Login</Text>
+          </Link>
+        </Text>
+      </View>
+    </ImageBackground>
   );
 };
 
@@ -205,6 +234,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
+    alignItems: "center",
+  },
+  Form: {
+    backgroundColor: "rgba(255,255,255,0.7)",
+    width: "90%",
+    shadowColor: Colors.light.text,
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.7,
+    shadowRadius: 4,
+    elevation: 5,
+    paddingHorizontal: 40,
+    paddingTop: 5,
+    paddingBottom: 10,
+    borderRadius: 20,
     alignItems: "center",
   },
   input: {
