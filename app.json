@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "FoodOrdering",
-    "slug": "FoodOrdering",
+    "name": "Bunkin' Bakery",
+    "slug": "bunkin-bakery",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

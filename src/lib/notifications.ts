@@ -79,7 +79,12 @@ const getUserToken = async (userId: string) => {
 export const notifyUserABoutOrderUpdate = async (order: Tables<"orders">) => {
   const token = (await getUserToken(order.userId)) || "";
   const title = `Your order #${order.id} is now ${order.status}`;
-  const body = `Order #${order.id} is now ${order.status}, Hang on over there! 🚚`;
+  let body = "";
+  if (order.status === "Delivered" || order.status === "delivered") {
+    body = `Your order #${order.id} has been delivered! Enjoy your meal 🥯😍`;
+  } else if (order.status !== "Delivered" && order.status !== "delivered") {
+    body = `Order #${order.id} is now ${order.status}, Hang on over there! 🚚`;
+  }
   console.log(token);
   sendPushNotification(token, title, body);
 };
